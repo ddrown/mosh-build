@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# install protoc locally
+cd /home/admin/protobuf-2.4.1
+./configure
+make
+make install

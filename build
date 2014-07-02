@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd /home/admin
+
+set -e
+
+export HOME=/home/admin
+export PATH=$PATH:/home/admin/droid/bin
+
+for ARCH_NAME in arm x86 mips; do
+  export ARCH_NAME
+  for i in ncurses-5.9 protobuf-2.4.1 openssl; do
+    cd $i
+    make clean ; opkg-buildirssi
+    cd ..
+  done
+done
