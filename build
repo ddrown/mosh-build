@@ -11,7 +11,32 @@ for ARCH_NAME in arm x86 mips; do
   export ARCH_NAME
   for i in ncurses-5.9 protobuf-2.4.1 openssl; do
     cd $i
-    make clean ; opkg-buildirssi
+    if [ -f Makefile ]; then
+      make clean
+    fi
+    opkg-buildirssi
     cd ..
+  done
+done
+
+
+for ARCH_NAME in arm x86 mips; do
+  export ARCH_NAME
+  rm -rf ~/droid/data
+  opkg-extract-devel-irssi ncurses-devel_5.9-2_$ARCH_NAME.ipk
+  opkg-extract-devel-irssi openssl-devel_1.0.1i-dev_$ARCH_NAME.ipk
+  opkg-extract-devel-irssi protobuf-devel_2.4.1_$ARCH_NAME.ipk
+  rm ~/droid/data/data/org.woltage.irssiconnectbot/files/lib/*.so
+
+  for WANT_PIE in pie nopie; do
+    export WANT_PIE
+    cd mosh
+    if [ -f Makefile ]; then
+      make clean
+    fi
+    opkg-buildirssi
+    cd ..
+    PKGNAME=`ls mosh_*_$ARCH_NAME.ipk`
+    mv $PKGNAME $PKGNAME-$WANT_PIE
   done
 done
