@@ -19,6 +19,8 @@ for ARCH_NAME in arm x86 mips; do
   done
 done
 
+# keep this for the /.../share/terminfo/ files
+cp ncurses_*_arm.ipk /target
 
 for ARCH_NAME in arm x86 mips; do
   export ARCH_NAME
