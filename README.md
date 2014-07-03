@@ -17,7 +17,7 @@ This will create 7 packages in $OUTPUTDIR:
 * mosh\_\*\_mips.ipk.nopie
 * ncurses\*\_arm.ipk
 
-The ncurses pakage is provided for the terminfo files
+The ncurses package is provided for the terminfo files
 
 ## To build a modified mosh:
 
