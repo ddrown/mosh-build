@@ -23,9 +23,11 @@ done
 for ARCH_NAME in arm x86 mips; do
   export ARCH_NAME
   rm -rf ~/droid/data
-  opkg-extract-devel-irssi ncurses-devel_5.9-2_$ARCH_NAME.ipk
-  opkg-extract-devel-irssi openssl-devel_1.0.1i-dev_$ARCH_NAME.ipk
-  opkg-extract-devel-irssi protobuf-devel_2.4.1_$ARCH_NAME.ipk
+  opkg-extract-devel-irssi ncurses-devel_*_$ARCH_NAME.ipk
+  opkg-extract-devel-irssi openssl-devel_*_$ARCH_NAME.ipk
+  opkg-extract-devel-irssi protobuf-devel_*_$ARCH_NAME.ipk
+
+  # only use static linking for our libs, android dynamic linking outside of /system/lib isn't fun
   rm ~/droid/data/data/org.woltage.irssiconnectbot/files/lib/*.so
 
   for WANT_PIE in pie nopie; do
@@ -37,6 +39,8 @@ for ARCH_NAME in arm x86 mips; do
     opkg-buildirssi
     cd ..
     PKGNAME=`ls mosh_*_$ARCH_NAME.ipk`
-    mv $PKGNAME $PKGNAME-$WANT_PIE
+    cp $PKGNAME /target/$PKGNAME-$WANT_PIE
   done
 done
+
+
