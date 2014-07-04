@@ -23,6 +23,9 @@ As well as the files (extracted from the packages):
 
 The terminfo files come from the ncurses package
 
+Options:
+add `-e PACKAGE_NAME=com.mosh.kosh.bagosh` to the command line if your terminfo will be in a different package.  mosh-client will expect them in /data/data/$PACKAGE\_NAME/files/share/terminfo/
+
 ## To build a modified mosh:
 
     OUTPUTDIR=~/target
