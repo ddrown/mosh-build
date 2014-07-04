@@ -1,4 +1,4 @@
-from android-cross-compile
+from ddrown/android-cross-compile
 
 maintainer Dan Drown <dan@drown.org>
 
