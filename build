@@ -4,6 +4,8 @@ cd /home/admin
 
 set -e
 
+export PACKAGE_NAME=${PACKAGE_NAME:-org.woltage.irssiconnectbot}
+
 export HOME=/home/admin
 export PATH=$PATH:/home/admin/droid/bin
 
@@ -19,8 +21,20 @@ for ARCH_NAME in arm x86 mips; do
   done
 done
 
+mkdir -p /target/share/terminfo/ /target/bin
+
 # keep this for the /.../share/terminfo/ files
 cp ncurses_*_arm.ipk /target
+
+rm -rf data
+mkdir data
+
+cd data
+rm -f *.tar.gz
+ar x ../ncurses_*_arm.ipk
+tar zxf data.tar.gz
+cd ..
+mv data/data/data/$PACKAGE_NAME/files/share/terminfo/{s/screen,v/vt100,x/xterm,x/xterm-color,x/xterm-256color,a/ansi} /target/share/terminfo/
 
 for ARCH_NAME in arm x86 mips; do
   export ARCH_NAME
@@ -30,7 +44,7 @@ for ARCH_NAME in arm x86 mips; do
   opkg-extract-devel-irssi protobuf-devel_*_$ARCH_NAME.ipk
 
   # only use static linking for our libs, android dynamic linking outside of /system/lib isn't fun
-  rm ~/droid/data/data/org.woltage.irssiconnectbot/files/lib/*.so
+  rm ~/droid/data/data/$PACKAGE_NAME/files/lib/*.so
 
   for WANT_PIE in pie nopie; do
     export WANT_PIE
@@ -42,7 +56,16 @@ for ARCH_NAME in arm x86 mips; do
     cd ..
     PKGNAME=`ls mosh_*_$ARCH_NAME.ipk`
     cp $PKGNAME /target/$PKGNAME-$WANT_PIE
+
+    rm -rf data
+    mkdir data
+
+    cd data
+    rm -f *.tar.gz
+    ar x ../$PKGNAME
+    tar zxf data.tar.gz
+    cd ..
+
+    mv data/data/data/$PACKAGE_NAME/files/bin/mosh-client /target/bin/mosh-client.$ARCH_NAME.$WANT_PIE
   done
 done
-
-
