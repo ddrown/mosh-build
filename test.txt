@@ -1,0 +1,108 @@
+Unless otherwise stated, these tests are on the official Google Android VM images (AVD).  Both the -fPIE and the non-pie binaries are run, to verify they are able to link all symbols at runtime.
+
+Problem: Android 2.3.3 ARM VM has an ARMv5 (ARM926EJ) based CPU, while the others have a Cortex-ish ARMv7
+[1]   Illegal instruction     ./mosh-client.ar...
+0x0006aecc in ?? ()
+=> 0x6aecc:     dmb     sy
+
+Solution: rebuilt the nopie binary with the "armeabi" libstdc++ instead of "armeabi-v7a"
+
+
+Problem: WARNING: linker: ./mosh-client.x86.pie has text relocations. This is wasting memory and is a security risk. Please fix.
+
+Solution: this comes from the TEXTREL flag (readelf -d mosh-client.x86.pie | grep TEXTREL), and a side effect of this PIE build on x86.  Most platforms do not have linker debugging turned on, and do not show this message.  The security risk is only during startup, when the text segments are unprotected in order to write the relocations in them.  They are reprotected after relocation is completed.
+
+
+===== ARM =====
+
+== Android L
+pie
+mosh-client (mosh 1.2.2)
+nopie
+error: only position independent executables (PIE) are supported.
+
+== Android 4.4.4 (CM11 nightly build)
+verified pie binary on d2tmo hardware in irssiconnectbot
+
+== Android 4.4.2
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.3
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.2.2 
+(also verified pie binary on emulator hardware in irssiconnectbot)
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.1.2
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.0.3
+pie
+[1]   Segmentation fault      ./mosh-client.ar...
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 2.3.3
+pie
+[1]   Segmentation fault      ./mosh-client.ar...
+nopie
+mosh-client (mosh 1.2.2)
+
+
+===== x86 =====
+
+== Android L
+pie
+mosh-client (mosh 1.2.2)
+nopie
+error: only position independent executables (PIE) are supported.
+
+== Android 4.4.2
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.3
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.2.2 
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.1.2
+pie
+mosh-client (mosh 1.2.2)
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 4.0.3
+pie
+[1]   Segmentation fault      ./mosh-client.x8...
+nopie
+mosh-client (mosh 1.2.2)
+
+== Android 2.3.3
+pie
+[hang]
+nopie
+mosh-client (mosh 1.2.2)
+
